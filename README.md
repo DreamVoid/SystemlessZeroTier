@@ -105,3 +105,7 @@ After 1.14.0, ZeroTierOne has introduce `multi-core concurrent packet processing
 However, for NDK, `pthread_setaffinity_np` won't be available until API level 36, Android 16. (refer to https://android.googlesource.com/platform/bionic/+/master/libc/include/pthread.h)
 
 So in the NDK bulid version, it is replaced by the combination of `pthread_gettid_np` from `<pthread.h>` and `sched_getaffinity` from `<sched.h>`.
+
+## Using your phone as router, want LAN to LAN mapping?
+
+See [ThermalEng/zerotier-magisk](https://github.com/ThermalEng/zerotier-magisk/). Inform me by creating issue. Future function and UI integration if many module users want it.
