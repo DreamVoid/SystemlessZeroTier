@@ -1,0 +1,17 @@
+Types: deb
+URIs: https://archive.ubuntu.com/ubuntu/
+Suites: jammy jammy-updates jammy-backports
+Components: main restricted universe multiverse
+Architectures: amd64
+
+Types: deb
+URIs: https://archive.ubuntu.com/ubuntu/
+Suites: jammy-security
+Components: main restricted universe multiverse
+Architectures: amd64
+
+Types: deb
+URIs: https://archive.ubuntu.com/ubuntu-ports/
+Suites: jammy jammy-updates jammy-backports jammy-security
+Components: main restricted universe multiverse
+Architectures: armhf arm64

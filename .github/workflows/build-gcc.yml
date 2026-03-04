@@ -10,12 +10,6 @@ jobs:
       - name: Checkout zerotier-magisk
         uses: actions/checkout@v4
 
-      - name: Checkout ZeroTierOne
-        uses: actions/checkout@v4
-        with:
-          repository: zerotier/ZeroTierOne
-          path: ZeroTierOne
-
       - id: commit
         uses: prompt/actions-commit-hash@v3
 
@@ -25,13 +19,13 @@ jobs:
           rustup target add aarch64-unknown-linux-gnu
 
           sudo dpkg --add-architecture arm64
-          sudo mv build/sources.list /etc/apt/sources.list
+          sudo cp build/sources.list /etc/apt/sources.list
           sudo apt-get update -qqy
           sudo apt-get install -qqy libssl-dev:arm64
 
       - name: Patch ZeroTier for Cross-Compile
         run: |
-          pip3 install toml
+          sudo apt install -qqy python3-pip python3-toml
           python3 build/patch.py
 
       - name: Build for AArch64

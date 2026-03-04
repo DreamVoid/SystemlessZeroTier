@@ -4,69 +4,69 @@
 
 # ZeroTier for Magisk
 
-[[中文](https://github.com/eventlOwOp/zerotier-magisk/blob/master/README_ZH.md) | English]
+[中文 | [English](README.en_US.md)]
 
 </div>
-  
-**Run zerotier in the background after booting!**
 
-**No conflicts with other Android VPN service!**
+**将 ZeroTier 保持后台运行**
 
-**Use Android App to control ZeroTier**
+**不与其他 Android VPN 应用程序冲突**
 
-**Support for Private Root Servers**
+**使用 Android App 进行控制**
 
-## Requirements
+**支持自建 Planet**
 
-1. a version is built with Android NDK Toolchain, supporting api 28 (Android 9.0) and above.
+## 运行要求
 
-2. another version is build with GCC toolchain, linking to Linux Syscalls statically
+1. 使用 NDK 编译的版本，支持 api 28 (Android 9.0) 及以上的设备
 
-Unofficial planet supported; SSO (zeroidc) supported in the version built with GCC for AArch64
+2. 使用 GCC 编译的版本，静态链接到 Linux Syscall，兼容性未知
 
-AArch64 suppots ARMv8-A and above; Arm version supports ARMv7-A (compiling with `-march=armv7-a`)
+均支持自建 planet；GCC AArch64 有支持 SSO (zeroidc) 的版本
 
-## Installation
+AArch64 版本支持 ARMv8-A 及以上；Arm 版本均对 ARMv7-A 进行编译 (`-march=armv7-a`)
 
-1. Download magisk module zip file from github release; install.
-2. Download controller app apk file from github release; install.
-3. Reboot your phone.
-4. Open controller app; enter your 16-character network id; join.
-5. Enjoy 😋
+## 安装
 
-## Usage
+1. 从 Release 处下载 magisk 模块压缩包，并安装
+2. 从 Release 处下载控制器的 apk 安装包，并安装
+3. 重启
+4. 打开控制器 App，输入 16 位 network id 并加入
+5. 享用 😋
 
-### Use Private Root Servers
+## 使用
 
-Replace `/data/adb/zerotier/home/planet` with your own `planet` file.
+### 自建 Planet
 
-### Controller App
+将 `/data/adb/zerotier/home/planet` 替换为自己的 planet 文件即可
 
-Does not need root privilege
+### 控制器 App
 
-| Feature            | Supported? |
-| :----------------- | :--------- |
-| status             | ✅         |
-| start/stop         | ✅         |
-| join/leave network | ✅         |
-| join/leave planet  | ❎         |
+无需 root 授权
+
+| 功能             | 支持状态 |
+| :--------------- | :------- |
+| 查看运行状态     | ✅       |
+| 启动停止重启     | ✅       |
+| 加入离开 network | ✅       |
+| 加入离开 planet  | ❎       |
 
 <div>
 <img alt="ZeroTier for Magisk Icon" src="https://github.com/eventlOwOp/zerotier-magisk/blob/master/images/app_home.jpg" width="192" />
 <img alt="ZeroTier for Magisk Icon" src="https://github.com/eventlOwOp/zerotier-magisk/blob/master/images/app_network.jpg" width="192" />
 </div>
 
-### Command line tools
+### 命令行
 
-Use `zerotier.sh` to start/stop or inspect status.
+查看运行状态，或者启动重启停止，使用 `zerotier.sh`
 
 `Usage: zerotier.sh {start|stop|restart|status}`
 
-Use `zerotier-cli / zerotier-idtool` for ZeroTierOne command line operations.
+ZeroTierOne 支持的所有命令行操作：使用 `zerotier-cli / zerotier-idtool`
 
-(`zerotier-one` not copied to `/system/bin`)
+（`zerotier-one` 并未导出到 `/system/bin`）
 
-## Files
+## 目录结构
 
 ```
 /data/adb/zerotier
@@ -88,24 +88,25 @@ Use `zerotier-cli / zerotier-idtool` for ZeroTierOne command line operations.
 └── zerotier.sh
 ```
 
-all the scripts and binaries are placed in `/data/adb/zerotier/`, and all copied to `/system/bin` (in PATH) to be executed directly (except `zerotier-one`)
+ZeroTier 可执行文件和操作的 Shell 脚本放在 `/data/adb/zerotier/` 下，同时复制到 `/system/bin`（PATH 中）以便于直接执行（除了 `zerotier-one`）
 
-`zerotier.sh` uses named pipe to communicate with `service.sh`, preventing ZeroTier to start as a subprocess of Shell.
+`zerotier.sh` 通过命名管道与 `service.sh` 交互，防止 ZeroTier 作为 Shell 的子进程运行
 
-log files are placed in `run`, `daemon.log` for `service.sh` and `zerotier.log` for ZeroTierOne.
+日志存放在 `/data/adb/zerotier/run` 下，`service.sh` 为 `daemon.log`，ZeroTier 为 `zerotier.log`.
 
-## Build binaries yourself
+## 自行编译
 
-refer to `.github/workflow/build-{gcc|ndk}.yml` for detailed information.
+参考 `.github/workflow/build-{gcc|ndk}.yml`
 
-## Notes
+## 注意
 
-After 1.14.0, ZeroTierOne has introduce `multi-core concurrent packet processing`, which requires `pthread_setaffinity_np`.
+1.14.0 后 ZeroTierOne 引入了 `multi-core concurrent packet processing` ，其中使用了 `pthread_setaffinity_np` 实现线程亲和性设置
 
-However, for NDK, `pthread_setaffinity_np` won't be available until API level 36, Android 16. (refer to https://android.googlesource.com/platform/bionic/+/master/libc/include/pthread.h)
+但 `pthread_setaffinity_np` 在 NDK 的 API level 36, Android 16 才受支持。 (参考 https://android.googlesource.com/platform/bionic/+/master/libc/include/pthread.h)
 
-So in the NDK bulid version, it is replaced by the combination of `pthread_gettid_np` from `<pthread.h>` and `sched_getaffinity` from `<sched.h>`.
+所以 NDK 中他被替换成了 `<pthread.h>` 中 `pthread_gettid_np` 和 `<sched.h>` 中 `sched_getaffinity` 的组合，来实现相同的功能
 
-## Using your phone as router, want LAN to LAN mapping?
+## 手机做路由器，想要 LAN to LAN
 
-See [ThermalEng/zerotier-magisk](https://github.com/ThermalEng/zerotier-magisk/). Inform me by creating issue. Future function and UI integration if many module users want it.
+参考 [ThermalEng/zerotier-magisk](https://github.com/ThermalEng/zerotier-magisk/)
+开 issue 统计一下需求，人多就合并再做 UI
