@@ -15,13 +15,13 @@ jobs:
 
       - name: Prepare GCC Toolchain
         run: |
-          sudo apt-get install -qqy gcc-aarch64-linux-gnu gcc-arm-linux-gnueabihf g++-aarch64-linux-gnu g++-arm-linux-gnueabihf
+          sudo apt-get install -y gcc-aarch64-linux-gnu gcc-arm-linux-gnueabihf g++-aarch64-linux-gnu g++-arm-linux-gnueabihf
           rustup target add aarch64-unknown-linux-gnu
 
           sudo dpkg --add-architecture arm64
           sudo cp build/sources.list /etc/apt/sources.list
-          sudo apt-get update -qqy
-          sudo apt-get install -qqy libssl-dev:arm64
+          sudo apt-get update -y
+          sudo apt-get install -y libssl-dev:arm64
 
       - name: Prepare submodules
         run: |
@@ -33,7 +33,7 @@ jobs:
 
       - name: Patch ZeroTier for Cross-Compile
         run: |
-          sudo apt install -qqy python3-pip python3-toml
+          sudo apt install -y python3-pip python3-toml
           python3 build/patch.py
 
       - name: Build for AArch64
@@ -44,7 +44,7 @@ jobs:
           cd ZeroTierOne
           mv make-linux.mk.aarch64 make-linux.mk
           make clean
-          make --silent -j $(nproc) ZT_SSO_SUPPORTED=0 ZT_STATIC=1 ZT_DEBUG=0 CC=$CC CXX=$CXX LDFLAGS="-s"
+          make --silent -w -j $(nproc) ZT_SSO_SUPPORTED=0 ZT_STATIC=1 ZT_DEBUG=0 CC=$CC CXX=$CXX LDFLAGS="-s" CFLAGS="-D_GNU_SOURCE" CXXFLAGS="-D_GNU_SOURCE"
           cd ..
 
           cp ZeroTierOne/zerotier-one magisk/zerotier
