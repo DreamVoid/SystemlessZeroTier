@@ -27,6 +27,9 @@ jobs:
         run: |
           git submodule init
           git submodule update
+          cd ZeroTierOne/
+          git checkout 1.14.2
+          cd ../
 
       - name: Patch ZeroTier for Cross-Compile
         run: |
