@@ -42,6 +42,7 @@ jobs:
           CXX=aarch64-linux-gnu-g++
 
           cd ZeroTierOne
+          find . -name "CMakeLists.txt" -exec sed -i 's/std=c++11/std=gnu++11/g' {} +
           mv make-linux.mk.aarch64 make-linux.mk
           make clean
           make CFLAGS="-D_GNU_SOURCE" CXXFLAGS="-D_GNU_SOURCE" --silent -w -j $(nproc) ZT_SSO_SUPPORTED=0 ZT_STATIC=1 ZT_DEBUG=0 CC=$CC CXX=$CXX LDFLAGS="-s"
