@@ -23,6 +23,11 @@ jobs:
           sudo apt-get update -qqy
           sudo apt-get install -qqy libssl-dev:arm64
 
+      - name: Prepare submodules
+        run: |
+          git submodule init
+          git submodule update
+
       - name: Patch ZeroTier for Cross-Compile
         run: |
           sudo apt install -qqy python3-pip python3-toml
@@ -30,9 +35,6 @@ jobs:
 
       - name: Build for AArch64
         run: |
-          git submodule init
-          git submodule update
-            
           CC=aarch64-linux-gnu-gcc
           CXX=aarch64-linux-gnu-g++
 
